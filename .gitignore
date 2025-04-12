@@ -1,5 +1,7 @@
+# Local specific shit
 inferencezoo/train/data
 inferencezoo/train/saved_models
+inferencezoo/inference/build
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
