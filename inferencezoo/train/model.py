@@ -1,7 +1,7 @@
-# model.py
 import torch
 import torch.nn as nn
-from config import Config
+
+from inferencezoo.train.config import Config
 
 class SimpleCNN(nn.Module):
     def __init__(self):
@@ -30,7 +30,7 @@ class SimpleCNN(nn.Module):
             nn.Linear(512, self.config.num_classes)
         )
     
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.features(x)
         x = self.classifier(x)
         return x
@@ -38,3 +38,18 @@ class SimpleCNN(nn.Module):
     @staticmethod
     def get_model():
         return SimpleCNN()
+    
+    @staticmethod
+    def save_torchscript_model(model, path):
+        """Export model to TorchScript format"""
+        example_input = torch.rand(1, 3, 32, 32).to(Config().device)
+        traced_model = torch.jit.trace(model, example_input)
+        
+        traced_model.save(path)
+        print(f"Model saved as TorchScript to {path}")
+
+    @staticmethod
+    def load_torchscript_model(path):
+        """Load a TorchScript model"""
+        model = torch.jit.load(path)
+        return model
